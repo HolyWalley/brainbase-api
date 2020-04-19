@@ -24,9 +24,11 @@ module Brainbase
         private
 
         def build_session(learner)
+          payload = { learner_id: learner.id }
           Success(
             JWTSessions::Session.new(
-              payload: { learner_id: learner.id },
+              payload: payload,
+              refresh_payload: payload,
               access_claims: { aud: %w[web password] }
             ).login
           )
