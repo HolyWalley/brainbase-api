@@ -2,32 +2,13 @@
 
 class Piece < ApplicationRecord
   belongs_to :learner
+  belongs_to :parent, optional: true
 
-  has_many :children_connections,
-           class_name:  "PiecesConnection",
-           foreign_key: :parent_id,
-           autosave:    true
-
-  has_many :parents_connections,
-           class_name:  "PiecesConnection",
-           foreign_key: :child_id,
-           autosave:    true
-
-  has_many :children, through: :children_connections, source: :child
-  has_many :parents, through: :parents_connections, source: :parent
+  has_many :children, class_name: "Piece", foreign_key: :parent_id
 
   scope :preload_x_levels, lambda { |x|
-    includes((x - 1).times.inject(:children) do |obj, _|
-      obj = { children: obj }
-      obj
-    end)
+    includes((x - 1).times.inject(:children) { { children: _1 } })
   }
 
-  scope :root, -> { where(root: true) }
-
-  def add_parent(parent)
-    parents_connections.build(parent: parent, child: self)
-
-    self
-  end
+  scope :root, -> { where(parent_id: nil) }
 end

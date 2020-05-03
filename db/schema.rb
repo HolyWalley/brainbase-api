@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_01_200732) do
+ActiveRecord::Schema.define(version: 2020_05_01_200704) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -26,27 +26,15 @@ ActiveRecord::Schema.define(version: 2020_05_01_200732) do
 
   create_table "pieces", force: :cascade do |t|
     t.bigint "learner_id"
+    t.bigint "parent_id"
     t.string "name", null: false
-    t.boolean "root", default: false, null: false
     t.text "content"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["learner_id"], name: "index_pieces_on_learner_id"
-  end
-
-  create_table "pieces_connections", force: :cascade do |t|
-    t.bigint "learner_id"
-    t.bigint "parent_id"
-    t.bigint "child_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["child_id"], name: "index_pieces_connections_on_child_id"
-    t.index ["learner_id"], name: "index_pieces_connections_on_learner_id"
-    t.index ["parent_id"], name: "index_pieces_connections_on_parent_id"
+    t.index ["parent_id"], name: "index_pieces_on_parent_id"
   end
 
   add_foreign_key "pieces", "learners"
-  add_foreign_key "pieces_connections", "learners"
-  add_foreign_key "pieces_connections", "pieces", column: "child_id"
-  add_foreign_key "pieces_connections", "pieces", column: "parent_id"
+  add_foreign_key "pieces", "pieces", column: "parent_id"
 end

@@ -32,7 +32,7 @@ module Tokens
     end
 
     def create_token(learner)
-      payload = build_payload.call(learner: learner)
+      payload = build_payload.call(learner: learner).success
 
       session = JWTSessions::Session.new(
         payload: payload, refresh_payload: { learner_id: learner.id }

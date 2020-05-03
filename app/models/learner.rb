@@ -2,7 +2,6 @@
 
 class Learner < ApplicationRecord
   has_many :pieces
-  has_many :pieces_connections
 
   def password
     @password ||= BCrypt::Password.new(password_digest)
