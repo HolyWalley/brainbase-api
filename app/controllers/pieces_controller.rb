@@ -5,7 +5,7 @@ class PiecesController < ApplicationController
     required(:piece).hash do
       required(:name).value(:string)
       optional(:content).value(:string)
-      optional(:root).value(:bool)
+      optional(:parent_id).value(:integer)
     end
   end
 
@@ -22,7 +22,7 @@ class PiecesController < ApplicationController
   def update
     piece = current_learner.pieces.find(params[:id])
 
-    if piece.update(safe_params)
+    if piece.update(safe_params[:piece])
       render json: PieceSerializer.new(piece)
     else
       render json: { errors: [piece.errors.to_h] }
@@ -41,14 +41,7 @@ class PiecesController < ApplicationController
     )
   end
 
-  # TODO: use safe params where when dry-rails #25 will be merged
-  def disconnect
-    case resolve('pieces.disconnect_parent').(learner: current_learner, piece_id: params[:piece_id], parent_id: params[:parent_id])
-    in Success()
-      head 200
-    end
-  end
-
+  # TODO
   def duplicate
   end
 

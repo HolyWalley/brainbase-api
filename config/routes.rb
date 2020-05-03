@@ -6,10 +6,6 @@ Rails.application.routes.draw do
   end
 
   resources :pieces do
-    delete "disconnect/:parent_id", action: :disconnect
-
     post :duplicate
   end
-
-  resources :pieces_connections
 end
