@@ -10,7 +10,7 @@ class LearnersController < ApplicationController
   end
 
   before_action :validate_params
-  skip_before_action :authorize_by_access_header!
+  skip_before_action :authorize_access_request!
 
   def create
     case resolve("learners.create_learner").(safe_params[:learner])

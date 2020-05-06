@@ -4,7 +4,7 @@ class ApplicationController < ActionController::API
   include Dry::Monads[:result]
   include JWTSessions::RailsAuthorization
 
-  before_action :authorize_by_access_header!, prepend: true
+  before_action :authorize_access_request!, prepend: true
 
   rescue_from JWTSessions::Errors::Unauthorized, with: :not_authorized
 
@@ -19,6 +19,6 @@ class ApplicationController < ActionController::API
   end
 
   def current_learner
-    @current_learner ||= Learner.find(payload['learner_id'])
+    @current_learner ||= Learner.find(payload["learner_id"])
   end
 end
